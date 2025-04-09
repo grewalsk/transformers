@@ -14,7 +14,7 @@
 
 from typing import TYPE_CHECKING
 
-from ....utils import OptionalDependencyNotAvailable, _LazyModule, is_torch_available, is_vision_available
+from ....utils import OptionalDependencyNotAvailable, _LazyModule, is_torch_available, is_torchvision_available, is_vision_available
 
 
 _import_structure = {
@@ -30,6 +30,14 @@ else:
     _import_structure["image_processing_deta"] = ["DetaImageProcessor"]
 
 try:
+    if not is_torchvision_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
+    _import_structure["image_processing_deta_fast"] = ["DetaImageProcessorFast"]
+
+try:
     if not is_torch_available():
         raise OptionalDependencyNotAvailable()
 except OptionalDependencyNotAvailable:
@@ -40,6 +48,14 @@ else:
         "DetaModel",
         "DetaPreTrainedModel",
     ]
+
+try:
+    if not is_vision_available() or not is_torch_available() or not is_torchvision_available():
+        raise OptionalDependencyNotAvailable()
+except OptionalDependencyNotAvailable:
+    pass
+else:
+    _import_structure["image_processing_deta_fast"] = ["DetaImageProcessorFast"]
 
 
 if TYPE_CHECKING:
@@ -54,6 +70,14 @@ if TYPE_CHECKING:
         from .image_processing_deta import DetaImageProcessor
 
     try:
+        if not is_torchvision_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
+        from .image_processing_deta_fast import DetaImageProcessorFast
+
+    try:
         if not is_torch_available():
             raise OptionalDependencyNotAvailable()
     except OptionalDependencyNotAvailable:
@@ -64,6 +88,14 @@ if TYPE_CHECKING:
             DetaModel,
             DetaPreTrainedModel,
         )
+        
+    try:
+        if not is_vision_available() or not is_torch_available() or not is_torchvision_available():
+            raise OptionalDependencyNotAvailable()
+    except OptionalDependencyNotAvailable:
+        pass
+    else:
+        from .image_processing_deta_fast import DetaImageProcessorFast
 
 else:
     import sys
